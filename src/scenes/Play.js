@@ -8,13 +8,6 @@ class Play extends Phaser.Scene {
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
-        this.load.image('starfield', './assets/SSAngry.png');
-        this.load.image('starfield', './assets/SSDefault.png');
-        this.load.image('starfield', './assets/SSHappy.png');
-        this.load.image('starfield', './assets/SSSad.png');
-        this.load.image('starfield', './assets/SSSeduce.png');
-        this.load.image('starfield', './assets/SSShock.png');
-        this.load.image('starfield', './assets/Player.png');
         //load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {
             frameWidth: 64,
@@ -98,7 +91,6 @@ class Play extends Phaser.Scene {
                 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
                 this.gameOver = true;
         }, null, this);
-        
     }
 
     update(){
@@ -165,7 +157,7 @@ class Play extends Phaser.Scene {
         this.sound.play('sfx_explosion');
     }
 
-    OnHitSceneCheck(){
-
+    OnHit(){
+        
     }
 }
