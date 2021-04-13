@@ -24,7 +24,7 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        //show menu text
+        //show menu text 
         this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding,
             'ROCKET PATROL', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire',

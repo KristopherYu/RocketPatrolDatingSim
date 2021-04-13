@@ -1,4 +1,4 @@
-console.log("This is da patrol, rocket patrol")
+console.log("This is da patrol, rocket patrol!")
 let config = {
     type: Phaser.CANVAS,
     width: 640,
