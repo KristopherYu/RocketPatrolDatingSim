@@ -114,9 +114,12 @@ class Play extends Phaser.Scene {
             ship.alpha = 1;
             boom.destroy();
         });
+<<<<<<< HEAD
     }
 
     OnHit(){
         
+=======
+>>>>>>> parent of 5189c6a (Added sfx, menu screens)
     }
 }
