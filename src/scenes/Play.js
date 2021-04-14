@@ -7,9 +7,17 @@ class Play extends Phaser.Scene {
         //loads images / tile sprites 
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('starfield', './assets/heartfield.png');
+        this.load.image('player', './assets/Player.png');
+        this.load.image('angry', './assets/SSAngry.png');
+        this.load.image('default', './assets/SSDefault.png');
+        this.load.image('happy', './assets/SSHappy.png');
+        this.load.image('disappoint', './assets/SSSad.png');
+        this.load.image('seduce', './assets/SSSeduce.png');
+        this.load.image('shock', './assets/SSShock.png');
+
         //load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', {
+        this.load.spritesheet('explosion', './assets/pinkexplosion.png', {
             frameWidth: 64,
             frameHeight: 32,
             startFrame: 0,
@@ -21,9 +29,9 @@ class Play extends Phaser.Scene {
         //place starfield
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
-        //green UI Background
+        // UI Background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width,
-        borderUISize * 2, 0x00FF00).setOrigin(0,0);
+        borderUISize * 2, 0xE039D0).setOrigin(0,0); //bar at the top with score
 
         //white borders
         this.add.rectangle( 0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
@@ -69,8 +77,8 @@ class Play extends Phaser.Scene {
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#CC2121', //background of score
+            color: '#78062D', //score number color
             align: 'right',
             padding: {
                 top: 5,
@@ -80,6 +88,8 @@ class Play extends Phaser.Scene {
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding,
             borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        
+
         // GAME OVER Flag
         this.gameOver = false;
         //60 second timer
@@ -91,17 +101,24 @@ class Play extends Phaser.Scene {
                 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
                 this.gameOver = true;
         }, null, this);
+
+        //countdown clock adapted from rexrainbow.github.io
+        this.timeLeft = this.clock.getElapsed();
+        this.baseTime = game.settings.gameTimer / 1000;
+        this.timeDisplay = this.add.text(game.config.height - borderPadding,
+            borderUISize + borderPadding*2, this.p1Score, scoreConfig);
     }
 
     update(){
         //check for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+            currTime.start();
             this.scene.restart();
         }
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
-        this.starfield.tilePositionX -= starspeed;
+        this.starfield.tilePositionX -= 1.5;
         if(!this.gameOver){
             //update rocket
             this.p1Rocket.update();
@@ -123,7 +140,8 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
-
+        this.timeLeft = Math.floor(this.clock.getElapsed() / 1000);
+        this.timeDisplay.text = this.baseTime - this.timeLeft;
     }
 
     //Check collision
@@ -155,5 +173,8 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
+    }
+    setEmotion(face) {
+        //set sprite to new face
     }
 }
