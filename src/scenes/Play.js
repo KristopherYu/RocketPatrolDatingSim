@@ -48,7 +48,9 @@ class Play extends Phaser.Scene {
         // add x3 spaceships
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6,
             borderUISize * 4, 'spaceship', 0, 30).setOrigin(0,0);
-            //this.ship01.moveSpeed = this.ship01.moveSpeed + 1;
+            //if(this.ship01.direction = 1){
+            //    this.ship01 = true;
+            //}
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3,
             borderUISize * 5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width,
@@ -95,6 +97,7 @@ class Play extends Phaser.Scene {
         //60 second timer
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            this.timeCheck = false;
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER',
             scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64,
@@ -107,6 +110,8 @@ class Play extends Phaser.Scene {
         this.baseTime = game.settings.gameTimer / 1000;
         this.timeDisplay = this.add.text(game.config.height - borderPadding,
             borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        //Check what time it is
+        this.timeCheck = false;
     }
 
     update(){
@@ -140,8 +145,16 @@ class Play extends Phaser.Scene {
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
-        this.timeLeft = Math.floor(this.clock.getElapsed() / 1000);
-        this.timeDisplay.text = this.baseTime - this.timeLeft;
+        this.timeLeft = this.baseTime - Math.floor(this.clock.getElapsed() / 1000);
+        this.timeDisplay.text = this.timeLeft;
+        //console.log(this.timeCheck == false && this.timeLeft < 30);
+        if(this.timeCheck == false && this.timeLeft < 30){
+            //console.log("Speed time");
+            this.ship01.moveSpeed += 2.5;
+            this.ship02.moveSpeed += 2.5;
+            this.ship03.moveSpeed += 2.5;
+            this.timeCheck = true;
+        }
     }
 
     //Check collision
