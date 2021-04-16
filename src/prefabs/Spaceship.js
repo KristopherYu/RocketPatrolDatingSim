@@ -26,10 +26,10 @@ class Spaceship extends Phaser.GameObjects.Sprite {
     }
     //position reset
     reset(){
+        this.randomize();
         this.x = game.config.width;
     }
     randomize(){
         this.direction = Math.floor(Math.random() * 2);
-        this.flipX = true;
     }
 }

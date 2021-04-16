@@ -32,8 +32,8 @@ class Play extends Phaser.Scene {
         this.cafe = this.add.tileSprite(0, 0, 640, 480, 'cafe').setOrigin(0, 0);
 
         // UI Background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width,
-        borderUISize * 2, 0xE039D0).setOrigin(0,0); //bar at the top with score
+        //this.add.rectangle(0, borderUISize + borderPadding, game.config.width,
+        //borderUISize * 2, 0xE039D0).setOrigin(0,0); //bar at the top with score
 
         //white borders
         this.add.rectangle( 0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
@@ -119,8 +119,9 @@ class Play extends Phaser.Scene {
         this.baseTime = game.settings.gameTimer / 1000;
         this.timeDisplay = this.add.text(game.config.height - borderPadding,
             borderUISize + borderPadding*3, this.p1Score, scoreConfig);
-        //Check what time it is
+        //what time it is
         this.timeCheck = false;
+        this.face = this.add.image(game.config.width/2 - 100, borderUISize * 2 - borderPadding*3, 'happy').setOrigin(0,0);
     }
 
     update(){
