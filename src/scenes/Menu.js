@@ -8,6 +8,12 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.spritesheet('instructions', './assets/instructions.png', {
+            frameWidth: 640,
+            frameHeight: 480,
+            startFrame: 0,
+            endFrame: 1
+        });
     }
 
     create(){
@@ -23,16 +29,29 @@ class Menu extends Phaser.Scene {
             },
             fixedWidth: 0
         }
+        //Instructions animation
 
+        this.anims.create({
+            key:'instruct',
+            frames: this.anims.generateFrameNumbers('instructions', {
+                start: 0,
+                end: 1,
+                first: 0
+            }),
+            frameRate: 5,
+            repeat: -1
+        })
+        let menu = this.add.sprite(0, 0, 'menu').setOrigin(0, 0);
+        menu.anims.play('instruct');
         //show menu text 
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding,
+        /*this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding,
             'ROCKET PATROL DATING SIM', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire',
             menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#ED79EA';
         menuConfig.color = '#000';
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding,
-            'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
+            'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);*/
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
