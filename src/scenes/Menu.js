@@ -91,6 +91,7 @@ class Menu extends Phaser.Scene {
                 game.settings = {
                     spaceshipSpeed: 3,
                     gameTimer: 60000,
+                    bonus: 1,
                     punish: 20
                 }
                 this.scene.start('playScene');
@@ -106,6 +107,7 @@ class Menu extends Phaser.Scene {
                 game.settings = {
                     spaceshipSpeed: 4,
                     gameTimer: 45000,
+                    bonus: 1.5,
                     punish: 40
                 }
                 this.scene.start('playScene');

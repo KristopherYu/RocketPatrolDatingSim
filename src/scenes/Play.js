@@ -95,11 +95,16 @@ class Play extends Phaser.Scene {
 
         // add x3 spaceships
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6,
-            borderUISize * 4, 'flirtShip', 0, 30).setOrigin(0,0);
+            borderUISize * 4, 'flirtShip', 0, 40 * game.settings.bonus).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3,
-            borderUISize * 5 + borderPadding*2, 'drinkShip', 0, 20).setOrigin(0,0);
+            borderUISize * 5 + borderPadding*2, 'drinkShip', 0, 20 * game.settings.bonus).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width,
-            borderUISize*6 + borderPadding*4, 'talkShip', 0, 10).setOrigin(0,0);
+            borderUISize*6 + borderPadding*4, 'talkShip', 0, 10 * game.settings.bonus).setOrigin(0,0);
+
+        //make the different ships have different speeds
+        this.ship01.moveSpeed += 1.5;
+        this.ship02.moveSpeed += 0.75;
+        this.ship03.moveSpeed += 0;
         //play animations
         this.ship01.anims.play('flirtShip');
         this.ship02.anims.play('drinkShip');
@@ -212,7 +217,7 @@ class Play extends Phaser.Scene {
             this.p1Rocket.update();
             //check if it hit the end of the screen and change image
             if(this.p1Rocket.y <= borderUISize * 3 + borderPadding){
-                this.p1Score -= game.settings.punish;
+                this.p1Score -= game.settings.punish * game.settings.bonus;
                 this.scoreLeft.text = 'Score:' + this.p1Score;
                 this.date.setTexture('angry');
                 this.doBounce(this.date);
@@ -248,9 +253,9 @@ class Play extends Phaser.Scene {
         //console.log(this.timeCheck == false && this.timeLeft < 30);
         if(this.timeCheck == false && this.timeLeft < 30){
             //console.log("Speed time");
-            this.ship01.moveSpeed += 2.5;
-            this.ship02.moveSpeed += 2.5;
-            this.ship03.moveSpeed += 2.5;
+            this.ship01.moveSpeed *= 1.5;
+            this.ship02.moveSpeed *= 1.5;
+            this.ship03.moveSpeed *= 1.5;
             this.timeCheck = true;
         }
         //Bounce animation for date
