@@ -9,6 +9,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
         this.load.image('cafe', './assets/CafeBackground.png');
+        this.load.image('default', './assets/SSSDefault.png');
         this.load.spritesheet('instructions', './assets/instructions.png', {
             frameWidth: 640,
             frameHeight: 480,
@@ -32,6 +33,7 @@ class Menu extends Phaser.Scene {
     create(){
         // Create Instructions animation
         this.cafe = this.add.tileSprite(0, 0, 640, 480, 'cafe').setOrigin(0, 0);
+        this.date = this.add.tileSprite(0, 0, 640, 480, 'default').setOrigin(0, 0);
         this.anims.create({
             key:'menu',
             frames: this.anims.generateFrameNumbers('menuScreen', {
@@ -88,7 +90,8 @@ class Menu extends Phaser.Scene {
             this.clock = this.time.delayedCall(750, () => {
                 game.settings = {
                     spaceshipSpeed: 3,
-                    gameTimer: 60000
+                    gameTimer: 60000,
+                    punish: 20
                 }
                 this.scene.start('playScene');
             }, null, this);
@@ -102,7 +105,8 @@ class Menu extends Phaser.Scene {
             this.clock = this.time.delayedCall(750, () => {
                 game.settings = {
                     spaceshipSpeed: 4,
-                    gameTimer: 45000
+                    gameTimer: 45000,
+                    punish: 40
                 }
                 this.scene.start('playScene');
             }, null, this);
