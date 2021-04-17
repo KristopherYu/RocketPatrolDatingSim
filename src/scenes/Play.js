@@ -121,6 +121,7 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
             
         // animation config
         this.anims.create({
@@ -147,6 +148,18 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 250
         }
+        let endConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#000000', //background of score
+            color: '#ffffff', //score number color
+            align: 'left',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 250
+        }
         this.scoreLeft = this.add.text(borderUISize + borderPadding - 5,
             borderUISize, 'Score:0', scoreConfig);
         
@@ -154,13 +167,15 @@ class Play extends Phaser.Scene {
         // GAME OVER Flag
         this.gameOver = false;
         //60 second timer
-        scoreConfig.fixedWidth = 0;
+        endConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.timeCheck = false;
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER',
-            scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64,
-                'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+            endConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, // Press (M) for Menu
+                'Press (R) to Restart', endConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 96, 
+                'Press (M) for Menu', endConfig).setOrigin(0.5);
                 this.gameOver = true;
         }, null, this);
 
@@ -171,7 +186,8 @@ class Play extends Phaser.Scene {
             borderUISize, "Time Remaining: " + this.timeLeft, scoreConfig);
         //what time it is
         this.timeCheck = false;
-
+        //add bounce
+        this.bounce = 0;
         //white borders
         this.add.rectangle( 0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
 
@@ -186,7 +202,7 @@ class Play extends Phaser.Scene {
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
-        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.scene.start("menuScene");
         }
         this.starfield.tilePositionX -= 1.5;
@@ -199,6 +215,8 @@ class Play extends Phaser.Scene {
                 this.p1Score -= game.settings.punish;
                 this.scoreLeft.text = 'Score:' + this.p1Score;
                 this.date.setTexture('angry');
+                this.doBounce(this.date);
+                this.sound.play('sfx_explosion');
                 this.p1Rocket.reset();
             }
             //update spaceships x3
@@ -209,16 +227,19 @@ class Play extends Phaser.Scene {
         //check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)){
             this.date.setTexture('default');
+            this.doBounce(this.date);
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
         }
         if(this.checkCollision(this.p1Rocket, this.ship02)){
             this.date.setTexture('shock');
+            this.doBounce(this.date);
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
         }
         if(this.checkCollision(this.p1Rocket, this.ship01)){
             this.date.setTexture('happy');
+            this.doBounce(this.date);
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
@@ -232,8 +253,16 @@ class Play extends Phaser.Scene {
             this.ship03.moveSpeed += 2.5;
             this.timeCheck = true;
         }
+        //Bounce animation for date
+        if(this.bounce > 0){
+            this.date.y -= 1;
+            this.bounce--;
+        }
     }
-
+    doBounce(face){
+        face.y += 5;
+        this.bounce = 5;
+    }
     //Check collision
     checkCollision(rocket, ship){
         //simple AABB checking
