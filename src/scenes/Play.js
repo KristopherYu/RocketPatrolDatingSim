@@ -6,7 +6,6 @@ class Play extends Phaser.Scene {
     preload(){
         //loads images / tile sprites 
         this.load.image('rocket', './assets/heartBomb.png');
-        this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/heartfield.png');
         this.load.image('cafe', './assets/cafeBackground.png');
         this.load.image('player', './assets/player.png');
@@ -14,6 +13,7 @@ class Play extends Phaser.Scene {
         this.load.image('default', './assets/SSSDefault.png');
         this.load.image('happy', './assets/SSSHappy.png');
         this.load.image('shock', './assets/SSSShocked.png');
+        this.load.image('sad', './assets/SSSSad.png');
         this.load.image('flower', './assets/flowerFrame.png');
         this.load.image('tail', './assets/tailBorder.png');
         this.load.image('drinkChat', './assets/drink1.png');
@@ -24,6 +24,8 @@ class Play extends Phaser.Scene {
         this.load.image('talkChat2', './assets/talk2.png');
         this.load.image('missChat', './assets/miss1.png');
         this.load.image('missChat2', './assets/miss2.png');
+        this.load.image('insultChat', './assets/insult1.png');
+        this.load.image('insultChat2', './assets/insult2.png');
 
         let spriteConfig = {            
             frameWidth: 64,
@@ -37,6 +39,12 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('talk', './assets/talkShip.png', spriteConfig);
         this.load.spritesheet('flirt', './assets/flirtShip.png', spriteConfig);
         this.load.spritesheet('drink', './assets/drinkShip.png', spriteConfig);
+        this.load.spritesheet('insult', './assets/insultShip.png', {
+            frameWidth: 32,
+            frameHeight: 18,
+            startFrame: 0,
+            endFrame: 9
+        });
     }
 
     create(){
@@ -89,23 +97,36 @@ class Play extends Phaser.Scene {
             frameRate: 5,
             repeat: -1
         });
+        this.anims.create({
+            key:'insultShip',
+            frames: this.anims.generateFrameNumbers('insult', {
+                start: 0,
+                end: 1,
+                first: 0
+            }),
+            frameRate: 5,
+            repeat: -1
+        });
 
-        // add x3 spaceships
+        // add x4 spaceships
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6,
             borderUISize * 4, 'flirtShip', 0, 40 * game.settings.bonus).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3,
             borderUISize * 5 + borderPadding*2, 'drinkShip', 0, 20 * game.settings.bonus).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width,
             borderUISize*6 + borderPadding*4, 'talkShip', 0, 10 * game.settings.bonus).setOrigin(0,0);
+        this.ship04 = new Spaceship(this, game.config.width,
+            borderUISize*6 + borderPadding*8, 'insultShip', 0, -40 * game.settings.bonus).setOrigin(0,0);
 
         //make the different ships have different speeds
         this.ship01.moveSpeed += 1.5;
         this.ship02.moveSpeed += 0.75;
-        this.ship03.moveSpeed += 0;
+        this.ship04.moveSpeed -= 3;
         //play animations
         this.ship01.anims.play('flirtShip');
         this.ship02.anims.play('drinkShip');
         this.ship03.anims.play('talkShip');
+        this.ship04.anims.play('insultShip');
         
         //if ships are flipped, change to go with it
         if(this.ship01.direction == 1){
@@ -116,6 +137,9 @@ class Play extends Phaser.Scene {
         }
         if(this.ship03.direction == 1){
             this.ship03.x = 0;
+        }
+        if(this.ship04.direction == 1){
+            this.ship04.x = 0;
         }
 
         //define our keys
@@ -218,31 +242,34 @@ class Play extends Phaser.Scene {
             if(this.p1Rocket.y <= borderUISize * 3 + borderPadding){
                 this.p1Score -= game.settings.punish * game.settings.bonus;
                 this.scoreLeft.text = 'Score:' + this.p1Score;
-                this.date.setTexture('angry');
-                this.doBounce(this.date);
-                this.sound.play('sfx_explosion');
+                this.setMiss();
+                this.sound.play('sadSound');
                 this.p1Rocket.reset();
             }
             //update spaceships x3
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
+            this.ship04.update();
         }
         //check collisions
+        if(this.checkCollision(this.p1Rocket, this.ship04)){
+            this.setInsult();
+            this.p1Rocket.reset();
+            this.shipExplode(this.ship04);
+        }
         if(this.checkCollision(this.p1Rocket, this.ship03)){
-            this.date.setTexture('default');
-            this.doBounce(this.date);
+            this.setTalk();
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
         }
         if(this.checkCollision(this.p1Rocket, this.ship02)){
-            this.setDrink(this.talk);
+            this.setDrink();
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
         }
         if(this.checkCollision(this.p1Rocket, this.ship01)){
-            this.date.setTexture('happy');
-            this.doBounce(this.date);
+            this.setFlirt();
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
         }
@@ -254,6 +281,7 @@ class Play extends Phaser.Scene {
             this.ship01.moveSpeed *= 1.5;
             this.ship02.moveSpeed *= 1.5;
             this.ship03.moveSpeed *= 1.5;
+            this.ship04.moveSpeed *= 1.5;
             this.timeCheck = true;
         }
         //Bounce animation for date
@@ -294,57 +322,78 @@ class Play extends Phaser.Scene {
         //score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = 'Score:' + this.p1Score;
-        this.sound.play('sfx_explosion');
     }
     setDrink() {
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('shock');
             this.talk.setTexture('drinkChat');
             this.doBounce(this.date);
+            this.sound.play('talkSound');
         }
         else{
-            this.date.setTexture('happy');
+            this.date.setTexture('default');
             this.talk.setTexture('drinkChat2');
             this.doBounce(this.date);
+            this.sound.play('talkSound');
         }
     }
     setFlirt(){
         //replace with new
         if(Math.floor(Math.random() * 2) == 1){
-            this.date.setTexture('shock');
-            this.talk.setTexture('drinkChat');
+            this.date.setTexture('happy');
+            this.talk.setTexture('flirtChat');
             this.doBounce(this.date);
+            this.sound.play('talkSound');
         }
         else{
             this.date.setTexture('happy');
-            this.talk.setTexture('drinkChat2');
+            this.talk.setTexture('flirtChat2');
             this.doBounce(this.date);
+            this.sound.play('talkSound');
         }
     }
     setTalk(){
         //change images
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('shock');
-            this.talk.setTexture('drinkChat');
+            this.talk.setTexture('talkChat');
             this.doBounce(this.date);
+            this.sound.play('talkSound');
         }
         else{
-            this.date.setTexture('happy');
-            this.talk.setTexture('drinkChat2');
+            this.date.setTexture('default');
+            this.talk.setTexture('talkChat2');
             this.doBounce(this.date);
+            this.sound.play('talkSound');
         }
     }
     setMiss(){
         //change images
         if(Math.floor(Math.random() * 2) == 1){
-            this.date.setTexture('shock');
-            this.talk.setTexture('drinkChat');
+            this.date.setTexture('angry');
+            this.talk.setTexture('missChat');
             this.doBounce(this.date);
+            this.sound.play('sadSound');
         }
         else{
-            this.date.setTexture('happy');
-            this.talk.setTexture('drinkChat2');
+            this.date.setTexture('sad');
+            this.talk.setTexture('missChat2');
             this.doBounce(this.date);
+            this.sound.play('sadSound');
+        }
+    }
+    setInsult(){
+        if(Math.floor(Math.random() * 2) == 1){
+            this.date.setTexture('angry');
+            this.talk.setTexture('insultChat');
+            this.doBounce(this.date);
+            this.sound.play('sadSound');
+        }
+        else{
+            this.date.setTexture('sad');
+            this.talk.setTexture('insultChat2');
+            this.doBounce(this.date);
+            this.sound.play('sadSound');
         }
     }
 }
