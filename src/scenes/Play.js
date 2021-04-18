@@ -54,6 +54,12 @@ class Play extends Phaser.Scene {
         this.date = this.add.tileSprite(0, 0, 640, 480, 'default').setOrigin(0, 0);
         this.talk = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
 
+        //add music
+        this.music = this.sound.add('music', {
+            loop:true
+        });
+        this.music.play();
+
         // UI Background
         //this.add.rectangle(0, borderUISize + borderPadding, game.config.width,
         //borderUISize * 2, 0xE039D0).setOrigin(0,0); //bar at the top with score
@@ -214,6 +220,8 @@ class Play extends Phaser.Scene {
         this.timeCheck = false;
         //add bounce
         this.bounce = 0;
+        //add music cut
+        this.musicCut = 0;
         //white borders
         /*this.add.rectangle( 0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
 
@@ -228,9 +236,11 @@ class Play extends Phaser.Scene {
     update(){
         //check for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+            this.music.stop();
             this.scene.restart();
         }
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
+            this.music.stop();
             this.scene.start("menuScene");
         }
         this.starfield.tilePositionX -= 1.5;
@@ -324,6 +334,10 @@ class Play extends Phaser.Scene {
         this.scoreLeft.text = 'Score:' + this.p1Score;
     }
     setDrink() {
+        if(this.musicCut == 1){
+            this.music.resume();
+            this.musicCut = 0;
+        }
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('shock');
             this.talk.setTexture('drinkChat');
@@ -338,7 +352,10 @@ class Play extends Phaser.Scene {
         }
     }
     setFlirt(){
-        //replace with new
+        if(this.musicCut == 1){
+            this.music.resume();
+            this.musicCut = 0;
+        }
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('happy');
             this.talk.setTexture('flirtChat');
@@ -353,7 +370,10 @@ class Play extends Phaser.Scene {
         }
     }
     setTalk(){
-        //change images
+        if(this.musicCut == 1){
+            this.music.resume();
+            this.musicCut = 0;
+        }
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('shock');
             this.talk.setTexture('talkChat');
@@ -368,7 +388,10 @@ class Play extends Phaser.Scene {
         }
     }
     setMiss(){
-        //change images
+        if(this.musicCut == 0){
+            this.music.pause();
+            this.musicCut = 1;
+        }
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('angry');
             this.talk.setTexture('missChat');
@@ -383,6 +406,10 @@ class Play extends Phaser.Scene {
         }
     }
     setInsult(){
+        if(this.musicCut == 0){
+            this.music.pause();
+            this.musicCut = 1;
+        }
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('angry');
             this.talk.setTexture('insultChat');
