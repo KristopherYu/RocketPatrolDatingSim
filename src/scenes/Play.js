@@ -5,21 +5,21 @@ class Play extends Phaser.Scene {
 
     preload(){
         //loads images / tile sprites 
-        this.load.image('rocket', './assets/HeartBomb.png');
+        this.load.image('rocket', './assets/heartBomb.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/heartfield.png');
-        this.load.image('cafe', './assets/CafeBackground.png');
-        this.load.image('player', './assets/Player.png');
+        this.load.image('cafe', './assets/cafeBackground.png');
+        this.load.image('player', './assets/player.png');
         this.load.image('angry', './assets/SSSAngry.png');
         this.load.image('default', './assets/SSSDefault.png');
         this.load.image('happy', './assets/SSSHappy.png');
         this.load.image('shock', './assets/SSSShocked.png');
-        this.load.image('flower', './assets/FlowerFrame.png');
-        this.load.image('tail', './assets/TailBorder.png');
-        this.load.image('drinkChat', './assets/Drink1.png');
-        this.load.image('drinkChat2', './assets/Drink2.png');
-        this.load.image('flirtChat', './assets/Flirt1.png');
-        this.load.image('flirtChat2', './assets/Flirt2.png');
+        this.load.image('flower', './assets/flowerFrame.png');
+        this.load.image('tail', './assets/tailBorder.png');
+        this.load.image('drinkChat', './assets/drink1.png');
+        this.load.image('drinkChat2', './assets/drink2.png');
+        this.load.image('flirtChat', './assets/flirt1.png');
+        this.load.image('flirtChat2', './assets/flirt2.png');
         this.load.image('talkChat', './assets/talk1.png');
         this.load.image('talkChat2', './assets/talk2.png');
         this.load.image('missChat', './assets/miss1.png');
