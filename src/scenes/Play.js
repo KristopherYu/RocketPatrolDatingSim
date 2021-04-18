@@ -15,34 +15,28 @@ class Play extends Phaser.Scene {
         this.load.image('happy', './assets/SSSHappy.png');
         this.load.image('shock', './assets/SSSShocked.png');
         this.load.image('flower', './assets/FlowerFrame.png');
-        this.load.image('tail', './assets/tailBorder.png');
+        this.load.image('tail', './assets/TailBorder.png');
+        this.load.image('drinkChat', './assets/Drink1.png');
+        this.load.image('drinkChat2', './assets/Drink2.png');
+        this.load.image('flirtChat', './assets/Flirt1.png');
+        this.load.image('flirtChat2', './assets/Flirt2.png');
+        this.load.image('talkChat', './assets/talk1.png');
+        this.load.image('talkChat2', './assets/talk2.png');
+        this.load.image('missChat', './assets/miss1.png');
+        this.load.image('missChat2', './assets/miss2.png');
 
-        //load spritesheet
-        this.load.spritesheet('explosion', './assets/pinkexplosion.png', {
+        let spriteConfig = {            
             frameWidth: 64,
             frameHeight: 32,
             startFrame: 0,
             endFrame: 9
-        });
+        };
+        //load spritesheet
+        this.load.spritesheet('explosion', './assets/pinkexplosion.png', spriteConfig);
         //load option ship spritesheets
-        this.load.spritesheet('talk', './assets/talkShip.png', {
-            frameWidth: 64,
-            frameHeight: 32,
-            startFrame: 0,
-            endFrame: 1
-        });
-        this.load.spritesheet('flirt', './assets/flirtShip.png', {
-            frameWidth: 64,
-            frameHeight: 32,
-            startFrame: 0,
-            endFrame: 1
-        });
-        this.load.spritesheet('drink', './assets/drinkShip.png', {
-            frameWidth: 64,
-            frameHeight: 32,
-            startFrame: 0,
-            endFrame: 1
-        });
+        this.load.spritesheet('talk', './assets/talkShip.png', spriteConfig);
+        this.load.spritesheet('flirt', './assets/flirtShip.png', spriteConfig);
+        this.load.spritesheet('drink', './assets/drinkShip.png', spriteConfig);
     }
 
     create(){
@@ -50,6 +44,7 @@ class Play extends Phaser.Scene {
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
         this.cafe = this.add.tileSprite(0, 0, 640, 480, 'cafe').setOrigin(0, 0);
         this.date = this.add.tileSprite(0, 0, 640, 480, 'default').setOrigin(0, 0);
+        this.talk = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
 
         // UI Background
         //this.add.rectangle(0, borderUISize + borderPadding, game.config.width,
@@ -61,7 +56,6 @@ class Play extends Phaser.Scene {
         //add rocket (player 1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding*3,
         'rocket').setOrigin(0.5, 0);
-
         //add spaceship animations
         this.anims.create({
             key:'flirtShip',
@@ -203,6 +197,7 @@ class Play extends Phaser.Scene {
         borderUISize, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);*/
+
         this.frame = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
     }
 
@@ -241,8 +236,7 @@ class Play extends Phaser.Scene {
             this.shipExplode(this.ship03);
         }
         if(this.checkCollision(this.p1Rocket, this.ship02)){
-            this.date.setTexture('shock');
-            this.doBounce(this.date);
+            this.setDrink(this.talk);
             this.p1Rocket.reset();
             this.shipExplode(this.ship02);
         }
@@ -302,7 +296,55 @@ class Play extends Phaser.Scene {
         this.scoreLeft.text = 'Score:' + this.p1Score;
         this.sound.play('sfx_explosion');
     }
-    setEmotion(face) {
-        //set sprite to new face
+    setDrink() {
+        if(Math.floor(Math.random() * 2) == 1){
+            this.date.setTexture('shock');
+            this.talk.setTexture('drinkChat');
+            this.doBounce(this.date);
+        }
+        else{
+            this.date.setTexture('happy');
+            this.talk.setTexture('drinkChat2');
+            this.doBounce(this.date);
+        }
+    }
+    setFlirt(){
+        //replace with new
+        if(Math.floor(Math.random() * 2) == 1){
+            this.date.setTexture('shock');
+            this.talk.setTexture('drinkChat');
+            this.doBounce(this.date);
+        }
+        else{
+            this.date.setTexture('happy');
+            this.talk.setTexture('drinkChat2');
+            this.doBounce(this.date);
+        }
+    }
+    setTalk(){
+        //change images
+        if(Math.floor(Math.random() * 2) == 1){
+            this.date.setTexture('shock');
+            this.talk.setTexture('drinkChat');
+            this.doBounce(this.date);
+        }
+        else{
+            this.date.setTexture('happy');
+            this.talk.setTexture('drinkChat2');
+            this.doBounce(this.date);
+        }
+    }
+    setMiss(){
+        //change images
+        if(Math.floor(Math.random() * 2) == 1){
+            this.date.setTexture('shock');
+            this.talk.setTexture('drinkChat');
+            this.doBounce(this.date);
+        }
+        else{
+            this.date.setTexture('happy');
+            this.talk.setTexture('drinkChat2');
+            this.doBounce(this.date);
+        }
     }
 }
