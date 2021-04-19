@@ -381,7 +381,7 @@ class Play extends Phaser.Scene {
             this.sound.play('talkSound');
         }
         else{
-            this.date.setTexture('default');
+            this.date.setTexture('shock');
             this.talk.setTexture('talkChat2');
             this.doBounce(this.date);
             this.sound.play('talkSound');
