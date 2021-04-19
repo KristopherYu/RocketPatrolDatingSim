@@ -30,6 +30,25 @@ class Menu extends Phaser.Scene {
             startFrame: 0,
             endFrame: 1
         });
+        //load in the equipment menu
+        this.load.spritesheet('equipTail', './assets/borderMenu.png', {
+            frameWidth: 640,
+            frameHeight: 480,
+            startFrame: 0,
+            endFrame: 1
+        });
+        this.load.spritesheet('equipFlower', './assets/borderFlowerMenu.png', {
+            frameWidth: 640,
+            frameHeight: 480,
+            startFrame: 0,
+            endFrame: 1
+        });
+        this.load.spritesheet('equipMacaroni', './assets/borderMacaroniMenu.png', {
+            frameWidth: 640,
+            frameHeight: 480,
+            startFrame: 0,
+            endFrame: 1
+        });
     }
 
     create(){
@@ -72,48 +91,95 @@ class Menu extends Phaser.Scene {
             frameRate: 5,
             repeat: -1
         });
+        //create the equip menus
+        this.anims.create({
+            key:'tail',
+            frames: this.anims.generateFrameNumbers('equipTail', {
+                start: 0,
+                end: 1,
+                first: 0
+            }),
+            frameRate: 5,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'flower',
+            frames: this.anims.generateFrameNumbers('equipFlower', {
+                start: 0,
+                end: 1,
+                first: 0
+            }),
+            frameRate: 5,
+            repeat: -1
+        });
+        this.anims.create({
+            key:'macaroni',
+            frames: this.anims.generateFrameNumbers('equipMacaroni', {
+                start: 0,
+                end: 1,
+                first: 0
+            }),
+            frameRate: 5,
+            repeat: -1
+        });
         this.inInstruct = 0;
         this.moveDown = 0;
+        this.borderEquip = 0;
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
     }
 
     update(){
         if(this.moveDown == 1){
             this.movePhone();
         }
-        if(Phaser.Input.Keyboard.JustDown(keyLEFT) && this.inInstruct <= 0){
-            this.moveDown = 1;
-            this.inInstruct = 5;
-            this.sound.play('menuSound');
-            //easy mode
-            this.clock = this.time.delayedCall(750, () => {
-                game.settings = {
-                    spaceshipSpeed: 3,
-                    gameTimer: 60000,
-                    bonus: 1,
-                    punish: 20
-                }
-                this.scene.start('playScene');
-            }, null, this);
-
+        if(Phaser.Input.Keyboard.JustDown(keyLEFT)){
+            if(this.borderEquip == 1){
+                border = 0;
+                this.sound.play('menuSound');
+            }
+            else if(this.inInstruct <= 0){
+                this.moveDown = 1;
+                this.inInstruct = 5;
+                this.sound.play('menuSound');
+                //easy mode
+                this.clock = this.time.delayedCall(750, () => {
+                    game.settings = {
+                        spaceshipSpeed: 3,
+                        gameTimer: 60000,
+                        bonus: 1,
+                        punish: 20,
+                    }
+                    this.scene.start('playScene');
+                }, null, this);
+            }
         }
-        if(Phaser.Input.Keyboard.JustDown(keyRIGHT) && this.inInstruct <= 0) {
-            this.moveDown = 1;
-            this.inInstruct = 5;
-            this.sound.play('menuSound');
-            //hard mode
-            this.clock = this.time.delayedCall(750, () => {
-                game.settings = {
-                    spaceshipSpeed: 4,
-                    gameTimer: 45000,
-                    bonus: 1.5,
-                    punish: 40
+        if(Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
+            if(this.borderEquip == 1){
+                if(flower == 1){
+                    border = 1;
+                    this.sound.play('menuSound');
                 }
-                this.scene.start('playScene');
-            }, null, this);
+            }
+            else if(this.inInstruct <= 0){
+                this.moveDown = 1;
+                this.inInstruct = 5;
+                this.sound.play('menuSound');
+                //hard mode
+                this.clock = this.time.delayedCall(750, () => {
+                    game.settings = {
+                        spaceshipSpeed: 4,
+                        gameTimer: 45000,
+                        bonus: 1.5,
+                        punish: 40,
+                    }
+                    this.scene.start('playScene');
+                }, null, this);
+            }
         }
         if(Phaser.Input.Keyboard.JustDown(keyF)) {
             if(this.inInstruct == 2){
@@ -133,8 +199,34 @@ class Menu extends Phaser.Scene {
                 this.inInstruct = 1;
             }
         }
+        if(Phaser.Input.Keyboard.JustDown(keyM) && this.borderEquip == 1 && macaroni == 1){
+            border = 2;
+            this.sound.play('menuSound');
+        }
+        if(Phaser.Input.Keyboard.JustDown(keyE) && this.inInstruct < 1){
+            this.showEquip();
+            this.inInstruct = 2;
+            this.borderEquip = 1;
+        }
     }
     movePhone(){
         this.menu.y += 10;
+    }
+    showEquip(){
+        if(macaroni == 1){
+            this.sound.play('menuSound');
+            let mac = this.add.sprite(0, 0, 'macaroni').setOrigin(0, 0);
+            mac.anims.play('macaroni');
+        }
+        else if(flower == 1){
+            this.sound.play('menuSound');
+            let flow = this.add.sprite(0, 0, 'flower').setOrigin(0, 0);
+            flow.anims.play('flower');
+        }
+        else{
+            this.sound.play('menuSound');
+            let original = this.add.sprite(0, 0, 'tail').setOrigin(0, 0);
+            original.anims.play('tail');
+        }
     }
 }

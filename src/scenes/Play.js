@@ -16,6 +16,7 @@ class Play extends Phaser.Scene {
         this.load.image('sad', './assets/SSSSad.png');
         this.load.image('flower', './assets/flowerFrame.png');
         this.load.image('tail', './assets/tailBorder.png');
+        this.load.image('macaroni', './assets/macaroniFrame.png');
         this.load.image('drinkChat', './assets/drink1.png');
         this.load.image('drinkChat2', './assets/drink2.png');
         this.load.image('flirtChat', './assets/flirt1.png');
@@ -26,6 +27,11 @@ class Play extends Phaser.Scene {
         this.load.image('missChat2', './assets/miss2.png');
         this.load.image('insultChat', './assets/insult1.png');
         this.load.image('insultChat2', './assets/insult2.png');
+        this.load.image('bad', './assets/endingBad.png');
+        this.load.image('worst', './assets/endingWorst.png');
+        this.load.image('good', './assets/endingGood.png');
+        this.load.image('best', './assets/endingBest.png');
+        this.load.image('zone', './assets/endingZone.png');
 
         let spriteConfig = {            
             frameWidth: 64,
@@ -52,7 +58,8 @@ class Play extends Phaser.Scene {
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
         this.cafe = this.add.tileSprite(0, 0, 640, 480, 'cafe').setOrigin(0, 0);
         this.date = this.add.tileSprite(0, 0, 640, 480, 'default').setOrigin(0, 0);
-        this.talk = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
+        //this is the textbox filler
+        this.talk = this.add.tileSprite(0, 0, 640, 480, 'default').setOrigin(0, 0);
 
         //add music
         this.music = this.sound.add('music', {
@@ -201,8 +208,24 @@ class Play extends Phaser.Scene {
         //60 second timer
         endConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            //make all ships invisible, textbox also
+            this.talk.alpha = 0;
+            this.ship01.alpha = 0;
+            this.ship02.alpha = 0;
+            this.ship03.alpha = 0;
+            this.ship04.alpha = 0;
+            this.p1Rocket.alpha = 0;
+            //Set highscore
+            if(this.p1Score > highscore){
+                highscore = this.p1Score;
+            }
+            //Check unlockables and play certain scenes
+            this.endScreen();
+            //Set gameover when time is up
             this.timeCheck = false;
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER',
+            endConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'BEST DATE: ' + highscore,
             endConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, // Press (M) for Menu
                 'Press (R) to Restart', endConfig).setOrigin(0.5);
@@ -216,21 +239,20 @@ class Play extends Phaser.Scene {
         this.baseTime = game.settings.gameTimer / 1000;
         this.timeDisplay = this.add.text(game.config.height - borderPadding*9,
             borderUISize, "Time Remaining: " + this.timeLeft, scoreConfig);
-        //what time it is
-        this.timeCheck = false;
-        //add bounce
-        this.bounce = 0;
-        //add music cut
-        this.musicCut = 0;
-        //white borders
-        /*this.add.rectangle( 0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
 
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width,
-        borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);*/
-
-        this.frame = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
+        this.timeCheck = false;   //what time it is
+        this.bounce = 0;          //add bounce
+        this.musicCut = 0;        //add music cut
+        //This is the frame
+        if(border == 2){
+            this.frame = this.add.tileSprite(0, 0, 640, 480, 'macaroni').setOrigin(0, 0);
+        }
+        else if(border == 1){
+            this.frame = this.add.tileSprite(0, 0, 640, 480, 'flower').setOrigin(0, 0);
+        }
+        else{
+            this.frame = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
+        }
     }
 
     update(){
@@ -422,5 +444,31 @@ class Play extends Phaser.Scene {
             this.doBounce(this.date);
             this.sound.play('sadSound');
         }
+    }
+    endScreen(){
+        if(this.p1Score >= 900){
+            macaroni = 1;
+            flower = 1;
+            this.end = this.add.tileSprite(0, 0, 640, 480, 'best').setOrigin(0, 0);
+        }
+        else if(this.p1Score >= 500){
+            flower = 1;
+            this.end = this.add.tileSprite(0, 0, 640, 480, 'good').setOrigin(0, 0);
+        }
+        else if(this.p1Score >= 0){
+            this.end = this.add.tileSprite(0, 0, 640, 480, 'zone').setOrigin(0, 0);
+        }
+        else if(this.p1Score >= -300){
+            this.end = this.add.tileSprite(0, 0, 640, 480, 'bad').setOrigin(0, 0);
+        }
+        else{
+            this.end = this.add.tileSprite(0, 0, 640, 480, 'worst').setOrigin(0, 0);
+        }
+        if(this.p1Score >= 0){
+            if(this.musicCut == 1){
+                this.music.resume();
+            }
+        }
+
     }
 }
