@@ -1,3 +1,7 @@
+//MOD CREATED BY KRISTOPHER YU
+//TITLE: SPACE LEFT IN THE HEART
+//FINALIZED: 4/19/2021
+//HOURS SUNK: 25+
 class Menu extends Phaser.Scene {
     constructor(){
         super("menuScene");
@@ -12,6 +16,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('music', './assets/TempMusic.wav');
         this.load.image('cafe', './assets/cafeBackground.png');
         this.load.image('default', './assets/SSSDefault.png');
+        //load in instructions
         this.load.spritesheet('instructions', './assets/instructions.png', {
             frameWidth: 640,
             frameHeight: 480,
@@ -25,6 +30,12 @@ class Menu extends Phaser.Scene {
             endFrame: 1
         });
         this.load.spritesheet('menuScreen', './assets/menuScreen.png', {
+            frameWidth: 640,
+            frameHeight: 480,
+            startFrame: 0,
+            endFrame: 1
+        });
+        this.load.spritesheet('tips', './assets/tipMenu.png', {
             frameWidth: 640,
             frameHeight: 480,
             startFrame: 0,
@@ -84,6 +95,17 @@ class Menu extends Phaser.Scene {
         this.anims.create({
             key:'keys',
             frames: this.anims.generateFrameNumbers('keyPress', {
+                start: 0,
+                end: 1,
+                first: 0
+            }),
+            frameRate: 5,
+            repeat: -1
+        });
+        //create the tips page
+        this.anims.create({
+            key:'tip',
+            frames: this.anims.generateFrameNumbers('tips', {
                 start: 0,
                 end: 1,
                 first: 0
@@ -182,9 +204,15 @@ class Menu extends Phaser.Scene {
             }
         }
         if(Phaser.Input.Keyboard.JustDown(keyF)) {
-            if(this.inInstruct == 2){
+            if(this.inInstruct == 3){
                 this.sound.play('menuSound');
                 this.scene.restart();
+            }
+            if(this.inInstruct == 2){
+                this.sound.play('menuSound');
+                let tip = this.add.sprite(0, 0, 'tip').setOrigin(0, 0);
+                tip.anims.play('tip');
+                this.inInstruct = 3;
             }
             if(this.inInstruct == 1){
                 this.sound.play('menuSound');
@@ -205,7 +233,7 @@ class Menu extends Phaser.Scene {
         }
         if(Phaser.Input.Keyboard.JustDown(keyE) && this.inInstruct < 1){
             this.showEquip();
-            this.inInstruct = 2;
+            this.inInstruct = 3;
             this.borderEquip = 1;
         }
     }

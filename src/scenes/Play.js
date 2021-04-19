@@ -1,3 +1,7 @@
+//MOD CREATED BY KRISTOPHER YU
+//TITLE: SPACE LEFT IN THE HEART
+//FINALIZED: 4/19/2021
+//HOURS SUNK: 25+
 class Play extends Phaser.Scene {
     constructor(){
         super("playScene");
@@ -32,6 +36,8 @@ class Play extends Phaser.Scene {
         this.load.image('good', './assets/endingGood.png');
         this.load.image('best', './assets/endingBest.png');
         this.load.image('zone', './assets/endingZone.png');
+        this.load.image('macGet', './assets/macaroniUnlock.png');
+        this.load.image('flowGet', './assets/flowerUnlock.png');
 
         let spriteConfig = {            
             frameWidth: 64,
@@ -447,21 +453,39 @@ class Play extends Phaser.Scene {
     }
     endScreen(){
         if(this.p1Score >= 900){
+            if(macaroni == 0){
+                this.end = this.add.tileSprite(0, 0, 640, 480, 'macGet').setOrigin(0, 0);
+            }
+            this.date.setTexture('happy');
             macaroni = 1;
             flower = 1;
             this.end = this.add.tileSprite(0, 0, 640, 480, 'best').setOrigin(0, 0);
         }
         else if(this.p1Score >= 500){
+            if(flower == 0){
+                this.end = this.add.tileSprite(0, 0, 640, 480, 'flowGet').setOrigin(0, 0);
+            }
+            this.date.setTexture('shock');
             flower = 1;
             this.end = this.add.tileSprite(0, 0, 640, 480, 'good').setOrigin(0, 0);
         }
         else if(this.p1Score >= 0){
+            
+            this.date.setTexture('default');
             this.end = this.add.tileSprite(0, 0, 640, 480, 'zone').setOrigin(0, 0);
         }
         else if(this.p1Score >= -300){
+            if(this.musicCut == 0){
+                this.music.pause();
+            }
+            this.date.setTexture('angry');
             this.end = this.add.tileSprite(0, 0, 640, 480, 'bad').setOrigin(0, 0);
         }
         else{
+            if(this.musicCut == 0){
+                this.music.pause();
+            }
+            this.date.setTexture('sad');
             this.end = this.add.tileSprite(0, 0, 640, 480, 'worst').setOrigin(0, 0);
         }
         if(this.p1Score >= 0){

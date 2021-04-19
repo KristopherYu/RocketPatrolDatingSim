@@ -1,3 +1,7 @@
+//MOD CREATED BY KRISTOPHER YU
+//TITLE: SPACE LEFT IN THE HEART
+//FINALIZED: 4/19/2021
+//HOURS SUNK: 25+
 // Rocket(player) prefab
 class Rocket extends Phaser.GameObjects.Sprite {
     constructor (scene, x, y, texture, frame){
