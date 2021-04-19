@@ -5,9 +5,9 @@
 //POINTS BREAKDOWN:
 //S(hrek): "Redesign the game's artwork,
 //UI, and sound to change its theme/aesthetic (to something other than sci-fi) (60)"
-//Explanation: "I think that the dating sim theme is there! I also changed all the base sound files and made music"
+//Explanation: "I've changed the theme to be a dating sim, I changed all the base sound files and made music"
 //Intermediate: New spaceship type (20)
-//Explanation: "There's a smaller ship at the bottom which is slow and deducts points"
+//Explanation: "I added a smaller spaceship (insult box) at the bottom of the screen which is slow, explodes on hit and deducts points to prevent spamming"
 //Novice: parallax scrolling (10)
 //Explanation: "The base background goes at a set speed, but the background in the window goes faster"
 // Display time remaining(10)
@@ -17,18 +17,17 @@
 //Randomize spaceship's movement direction at the start of each play (5)
 //Explanation: "Spaceship movement is randomized at the start, and after each hit"
 //Inplement speed increase that happens after 30 seconds (5)
-//Explanation: "It goes fast after 30 seconds"
+//Explanation: "It goes faster when there is 30 seconds remaining"
 // Track high score (5)
-// Explanation: It shows the best date at the end of each game
-// #FACADE Tier (TBD)
-//      Music pauses when misses
+// Explanation: It shows the best date score at the end of each game
+// #FACADE Tier (Bonus)
+//      Music pauses when player misses
 //      Score decrease on misses
 //      Unlockable borders
-//      Changing animations based on what you hit
-//      Cute lizard alien boy
+//      Changing dialog animations based on enemy/option you hit
 //      Tutorial/Instruction pages
 //      Score modifiers based on difficulty level
-//      Anything else?
+//      Different ui endings based on score
 //Total: 120 + FACADE
 let config = {
     type: Phaser.CANVAS,
