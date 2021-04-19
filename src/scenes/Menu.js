@@ -5,7 +5,7 @@ class Menu extends Phaser.Scene {
 
     preload(){
         //load audio
-        this.load.audio('sfx_select', './assets/blip_select12.wav');
+        this.load.audio('menuSound', './assets/menuSound.wav');
         this.load.audio('talkSound', './assets/talk.wav');
         this.load.audio('sadSound', './assets/sadNoise.wav');
         this.load.audio('fire', './assets/Fire.wav');
@@ -87,7 +87,7 @@ class Menu extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(keyLEFT) && this.inInstruct <= 0){
             this.moveDown = 1;
             this.inInstruct = 5;
-            this.sound.play('sfx_select');
+            this.sound.play('menuSound');
             //easy mode
             this.clock = this.time.delayedCall(750, () => {
                 game.settings = {
@@ -103,7 +103,7 @@ class Menu extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(keyRIGHT) && this.inInstruct <= 0) {
             this.moveDown = 1;
             this.inInstruct = 5;
-            this.sound.play('sfx_select');
+            this.sound.play('menuSound');
             //hard mode
             this.clock = this.time.delayedCall(750, () => {
                 game.settings = {
@@ -117,17 +117,17 @@ class Menu extends Phaser.Scene {
         }
         if(Phaser.Input.Keyboard.JustDown(keyF)) {
             if(this.inInstruct == 2){
-                this.sound.play('sfx_select');
+                this.sound.play('menuSound');
                 this.scene.restart();
             }
             if(this.inInstruct == 1){
-                this.sound.play('sfx_select');
+                this.sound.play('menuSound');
                 let keys = this.add.sprite(0, 0, 'keys').setOrigin(0, 0);
                 keys.anims.play('keys');
                 this.inInstruct = 2;
             }
             if(this.inInstruct == 0){
-                this.sound.play('sfx_select');
+                this.sound.play('menuSound');
                 let howToPlay = this.add.sprite(0, 0, 'howToPlay').setOrigin(0, 0);
                 howToPlay.anims.play('howToPlay');
                 this.inInstruct = 1;
