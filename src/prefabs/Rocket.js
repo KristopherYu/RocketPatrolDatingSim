@@ -14,22 +14,23 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.fire = scene.sound.add('fire');
     }
 
-    update() {
+    update(time, delta) {
+        let deltaMultiplier = (delta/16.66667);
         //if(!this.isFiring){
             if(keyLEFT.isDown && this.x >= borderUISize + this.width) {
                 if(this.isFiring){
-                    this.x -= 2;
+                    this.x -= 2 * deltaMultiplier;
                 }
                 else{
-                    this.x -= 4;
+                    this.x -= 4 * deltaMultiplier;
                 }
             }
             else if(keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width){
                 if(this.isFiring){
-                    this.x += 2;
+                    this.x += 2 * deltaMultiplier;
                 }
                 else{
-                    this.x += 4;
+                    this.x += 4 * deltaMultiplier;
                 }
             }
         //}

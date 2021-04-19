@@ -31,6 +31,8 @@ class Play extends Phaser.Scene {
         this.load.image('missChat2', './assets/miss2.png');
         this.load.image('insultChat', './assets/insult1.png');
         this.load.image('insultChat2', './assets/insult2.png');
+        this.load.image('flowerTalk', './assets/talkFlower.png');
+        this.load.image('macTalk', './assets/talkMac.png');
         this.load.image('bad', './assets/endingBad.png');
         this.load.image('worst', './assets/endingWorst.png');
         this.load.image('good', './assets/endingGood.png');
@@ -140,7 +142,7 @@ class Play extends Phaser.Scene {
         //make the different ships have different speeds
         this.ship01.moveSpeed += 1.5;
         this.ship02.moveSpeed += 0.75;
-        this.ship04.moveSpeed -= 3;
+        this.ship04.moveSpeed -= 2;
         //play animations
         this.ship01.anims.play('flirtShip');
         this.ship02.anims.play('drinkShip');
@@ -260,8 +262,9 @@ class Play extends Phaser.Scene {
             this.frame = this.add.tileSprite(0, 0, 640, 480, 'tail').setOrigin(0, 0);
         }
     }
-
-    update(){
+    //time,delta adjustments adapted from ScTiger#4966 (Ethan Rafael) on discord
+    update(time, delta){
+        let deltaMultiplier = (delta/16.66667);
         //check for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.music.stop();
@@ -271,11 +274,11 @@ class Play extends Phaser.Scene {
             this.music.stop();
             this.scene.start("menuScene");
         }
-        this.starfield.tilePositionX -= 1.5;
-        this.cafe.tilePositionX -= 0.75;
+        this.starfield.tilePositionX -= 1.5*deltaMultiplier;
+        this.cafe.tilePositionX -= 0.75*deltaMultiplier;
         if(!this.gameOver){
             //update rocket
-            this.p1Rocket.update();
+            this.p1Rocket.update(time, delta);
             //check if it hit the end of the screen and change image
             if(this.p1Rocket.y <= borderUISize * 3 + borderPadding){
                 this.p1Score -= game.settings.punish * game.settings.bonus;
@@ -285,10 +288,10 @@ class Play extends Phaser.Scene {
                 this.p1Rocket.reset();
             }
             //update spaceships x3
-            this.ship01.update();
-            this.ship02.update();
-            this.ship03.update();
-            this.ship04.update();
+            this.ship01.update(time, delta);
+            this.ship02.update(time, delta);
+            this.ship03.update(time, delta);
+            this.ship04.update(time, delta);
         }
         //check collisions
         if(this.checkCollision(this.p1Rocket, this.ship04)){
@@ -402,11 +405,25 @@ class Play extends Phaser.Scene {
             this.music.resume();
             this.musicCut = 0;
         }
-        if(Math.floor(Math.random() * 2) == 1){
-            this.date.setTexture('shock');
-            this.talk.setTexture('talkChat');
-            this.doBounce(this.date);
-            this.sound.play('talkSound');
+        if(Math.floor(Math.random() * 2) == 1){ //First time date w/human
+            if(border == 2){
+                this.date.setTexture('happy');
+                this.talk.setTexture('macTalk');
+                this.doBounce(this.date);
+                this.sound.play('talkSound');
+            }
+            else if(border == 1){
+                this.date.setTexture('shock');
+                this.talk.setTexture('flowerTalk');
+                this.doBounce(this.date);
+                this.sound.play('talkSound');
+            }
+            else{
+                this.date.setTexture('shock');
+                this.talk.setTexture('talkChat');
+                this.doBounce(this.date);
+                this.sound.play('talkSound');
+            }
         }
         else{
             this.date.setTexture('shock');

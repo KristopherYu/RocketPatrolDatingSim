@@ -13,15 +13,16 @@ class Spaceship extends Phaser.GameObjects.Sprite {
         this.randomize();
     }
 
-    update()    {
+    update(time, delta)    {
+        let deltaMultiplier = (delta/16.66667);
         if(this.direction == 1){
-            this.x += this.moveSpeed;
+            this.x += this.moveSpeed * deltaMultiplier;
             if(this.x >= game.config.width){
                 this.x = 0 - this.width;
             }
         }
         else{   // move spaceship left
-            this.x -= this.moveSpeed;
+            this.x -= this.moveSpeed * deltaMultiplier;
             //wrap around from left to right edge
             if(this.x <= 0 - this.width){
                 this.reset();
