@@ -18,6 +18,7 @@ class Play extends Phaser.Scene {
         this.load.image('happy', './assets/SSSHappy.png');
         this.load.image('shock', './assets/SSSShocked.png');
         this.load.image('sad', './assets/SSSSad.png');
+        this.load.image('shy', './assets/SSSEmbarrassed.png');
         this.load.image('flower', './assets/flowerFrame.png');
         this.load.image('tail', './assets/tailBorder.png');
         this.load.image('macaroni', './assets/macaroniFrame.png');
@@ -25,6 +26,7 @@ class Play extends Phaser.Scene {
         this.load.image('drinkChat2', './assets/drink2.png');
         this.load.image('flirtChat', './assets/flirt1.png');
         this.load.image('flirtChat2', './assets/flirt2.png');
+        this.load.image('flirtChat3', './assets/flirt3.png');
         this.load.image('talkChat', './assets/talk1.png');
         this.load.image('talkChat2', './assets/talk2.png');
         this.load.image('missChat', './assets/miss1.png');
@@ -390,6 +392,12 @@ class Play extends Phaser.Scene {
         if(Math.floor(Math.random() * 2) == 1){
             this.date.setTexture('happy');
             this.talk.setTexture('flirtChat');
+            this.doBounce(this.date);
+            this.sound.play('talkSound');
+        }
+        else if(Math.floor(Math.random() * 2) == 1){
+            this.date.setTexture('shy');
+            this.talk.setTexture('flirtChat3');
             this.doBounce(this.date);
             this.sound.play('talkSound');
         }
